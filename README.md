@@ -25,6 +25,11 @@ Spacebar - Shoot
     - changes sprites when damaged as visual feedback
 - Added player health system and health bar at the top
 - Added invinsibility frames (with shield visual feedback)
+- Added 3 new weapons
+    - Spread shot
+    - Rapid fire
+    - Alien fire
+- Added weapon select interface at the top
 
 ## Notes
 Tutorial: [Space Invaders 101: An Accelerated Java 2D Tutorial](http://www.cokeandcode.com/info/tut2d.html)
