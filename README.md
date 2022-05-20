@@ -18,6 +18,8 @@ Spacebar - Shoot
 
 1, 2, 3, 4 - Select weapon 1-4
 
+ESC - Quit
+
 ## Changes
 
 - Added WASD movement
