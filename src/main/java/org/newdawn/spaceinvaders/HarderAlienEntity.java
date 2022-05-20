@@ -48,7 +48,7 @@ public class HarderAlienEntity extends AlienEntity {
         // Determine whether the alien will shoot this logic update
         if (random.nextBoolean()) {
             // Determine when the alien will shoot (in milliseconds)
-            long delay = random.nextLong(1000, 2001);
+            long delay = random.nextLong() & 1001 + 1000;
 
             // Task that fires the shot and adds the entity to the game
             TimerTask fireTask = new TimerTask() {
