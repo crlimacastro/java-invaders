@@ -8,13 +8,17 @@ A Java Development Kit (JDK), version 8 or higher
 From a console window pointed at the root of the project run the "gradlew run" command.
 
 ## Controls
-Left Arrow - Move left
+Left Arrow/A - Move left
 
-Right Arrow - Move right
+Right Arrow/D - Move right
 
 Spacebar - Shoot
 
 1, 2, 3, 4 - Select weapon 1-4
+
+## Changes
+
+- Added WASD movement
 
 ## Notes
 Tutorial: [Space Invaders 101: An Accelerated Java 2D Tutorial](http://www.cokeandcode.com/info/tut2d.html)
