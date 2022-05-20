@@ -19,6 +19,12 @@ Spacebar - Shoot
 ## Changes
 
 - Added WASD movement
+- Added harder enemy
+    - takes 2 shots to kill
+    - shoots bullets towards the player
+    - changes sprites when damaged as visual feedback
+- Added player health system and health bar at the top
+- Added invinsibility frames (with shield visual feedback)
 
 ## Notes
 Tutorial: [Space Invaders 101: An Accelerated Java 2D Tutorial](http://www.cokeandcode.com/info/tut2d.html)

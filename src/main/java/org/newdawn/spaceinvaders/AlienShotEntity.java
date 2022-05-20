@@ -1,27 +1,22 @@
 package org.newdawn.spaceinvaders;
 
-/**
- * An entity representing a shot fired by the player's ship
- * 
- * @author Kevin Glass
- */
-public class ShotEntity extends Entity {
-	/** The vertical speed at which the players shot moves */
-	private double moveSpeed = -300;
+public class AlienShotEntity extends Entity {
+    /** The vertical speed at which the shot moves */
+	private double moveSpeed = 300;
 	/** The game in which this entity exists */
 	private Game game;
 	/** True if this shot has been "used", i.e. its hit something */
 	private boolean used = false;
-	
-	/**
-	 * Create a new shot from the player
+
+    /**
+	 * Create a new shot from the alien
 	 * 
 	 * @param game The game in which the shot has been created
 	 * @param sprite The sprite representing this shot
 	 * @param x The initial x location of the shot
 	 * @param y The initial y location of the shot
 	 */
-	public ShotEntity(Game game,String sprite,int x,int y) {
+	public AlienShotEntity(Game game,String sprite,int x,int y) {
 		super(sprite,x,y);
 		
 		this.game = game;
@@ -34,12 +29,13 @@ public class ShotEntity extends Entity {
 	 * 
 	 * @param delta The time that has elapsed since last move
 	 */
+	@Override
 	public void move(long delta) {
 		// proceed with normal move
 		super.move(delta);
 		
 		// if we shot off the screen, remove ourselfs
-		if (y < -100) {
+		if (y > 700) {
 			game.removeEntity(this);
 		}
 	}
@@ -57,33 +53,14 @@ public class ShotEntity extends Entity {
 			return;
 		}
 		
-		// if we've hit a harder alien, damage/kill it
-		if (other instanceof HarderAlienEntity) {
+		// if we've hit the player
+		if (other instanceof ShipEntity) {
 			// remove the shot
 			game.removeEntity(this);
 
-			// damage the harder alien
-			HarderAlienEntity alien = (HarderAlienEntity)other;
-			alien.damage();
-
-			// remove the alien if it's dead
-			if (alien.getHealth() < 1) {
-				game.removeEntity(alien);
-			}
-
-			// notify the game that we've killed an alien
-			game.notifyAlienKilled();
+			// damage the ship
+			((ShipEntity)other).damage();
 			used = true;
 		}
-		// if we've hit an alien, kill it!
-		else if (other instanceof AlienEntity) {
-			// remove the affected entities
-			game.removeEntity(this);
-			game.removeEntity(other);
-			
-			// notify the game that the alien has been killed
-			game.notifyAlienKilled();
-			used = true;
-		}
-	}
+    }
 }
