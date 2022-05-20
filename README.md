@@ -9,11 +9,11 @@ A Java Development Kit (JDK), version 8 or higher
 ## Running the game
 From a console window pointed at the root of the project run the "gradlew run" command.
 
-If you run into
+If you run into:
 
 `ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.`
 
-Go into your environment variables. Make sure to create a JAVA_HOME system variable that directs to your JDK install directory. Then add the binaries in this directory to your PATH 
+Go into your environment variables. Make sure to create a JAVA_HOME system variable that directs to your JDK install directory. Then add the binaries in this directory to your PATH.
 
 ## Controls
 Left Arrow/A - Move left
