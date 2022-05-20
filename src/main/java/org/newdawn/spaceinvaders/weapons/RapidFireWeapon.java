@@ -4,23 +4,23 @@ import org.newdawn.spaceinvaders.Entity;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.ShotEntity;
 
-public class DefaultWeapon implements IWeapon {
+public class RapidFireWeapon implements IWeapon {
     private Game game;
     private Entity ship;
 
-    public DefaultWeapon(Game game, Entity ship) {
+    public RapidFireWeapon(Game game, Entity ship) {
         this.game = game;
         this.ship = ship;
     }
 
     @Override
     public void onEquip() {
-        /** Nothing happens */
+        game.setFiringInterval(100);
     }
 
     @Override
     public void onUnequip() {
-        /** Nothing happens */
+        game.setFiringInterval(500);
     }
 
     @Override

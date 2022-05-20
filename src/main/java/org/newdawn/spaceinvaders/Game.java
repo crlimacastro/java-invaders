@@ -15,6 +15,11 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.newdawn.spaceinvaders.weapons.DefaultWeapon;
+import org.newdawn.spaceinvaders.weapons.RapidFireWeapon;
+import org.newdawn.spaceinvaders.weapons.AlienWeapon;
+import org.newdawn.spaceinvaders.weapons.SpreadShotWeapon;
+
 /**
  * The main hook of our game. This class with both act as a manager
  * for the display and central mediator for the game logic.
@@ -70,6 +75,15 @@ public class Game extends Canvas {
 	 */
 	private boolean logicRequiredThisLoop = false;
 
+	private int weaponSelected = 0;
+	private Sprite[] weaponSprites = {
+		SpriteStore.get().getSprite("sprites/defaultshotico.gif"),
+		SpriteStore.get().getSprite("sprites/spreadshotico.gif"),
+		SpriteStore.get().getSprite("sprites/rapidshotico.gif"),
+		SpriteStore.get().getSprite("sprites/alienshotico.gif"),
+		
+	};
+
 	/**
 	 * Construct our game and set it running.
 	 */
@@ -105,7 +119,7 @@ public class Game extends Canvas {
 
 		// add a key input system (defined below) to our canvas
 		// so we can respond to key pressed
-		addKeyListener(new KeyInputHandler());
+		addKeyListener(new KeyInputHandler(this));
 
 		// request the focus so key events come to us
 		requestFocus();
@@ -237,7 +251,7 @@ public class Game extends Canvas {
 	public void notifyShipDamaged() {
 		// TODO Update Health UI
 
-		ShipEntity shipCasted = (ShipEntity)ship;
+		ShipEntity shipCasted = (ShipEntity) ship;
 		if (shipCasted.getHealth() <= 0) {
 			notifyDeath();
 		}
@@ -256,7 +270,7 @@ public class Game extends Canvas {
 
 		// if we waited long enough, create the shot entity, and record the time.
 		lastFire = System.currentTimeMillis();
-		((ShipEntity)ship).fireWeapon();
+		((ShipEntity) ship).fireWeapon();
 	}
 
 	/**
@@ -299,13 +313,22 @@ public class Game extends Canvas {
 			// draw ship health
 			g.setColor(Color.white);
 			g.drawString("Health: ", 16, 16 + g.getFontMetrics().getHeight() / 2);
-			ShipEntity shipCasted = (ShipEntity)ship;
+			ShipEntity shipCasted = (ShipEntity) ship;
 			Sprite shipSprite = SpriteStore.get().getSprite("sprites/ship.gif");
 			for (int i = 0; i < shipCasted.getHealth(); i++) {
 				int x = 16 + g.getFontMetrics().stringWidth("Health: ") + 8 + shipSprite.getWidth() * i;
 				int y = 8;
 				shipSprite.draw(g, x, y);
 			}
+
+			// draw weapon select
+			int weaponSpriteWidth = weaponSprites[0].getWidth();
+			int weaponSpriteHeight = weaponSprites[0].getHeight();
+			for (int i = 0; i < weaponSprites.length; i++) {
+				weaponSprites[i].draw(g, 200 + i * (weaponSpriteWidth + 4), 4);	
+			}
+			g.drawRect(200 - 2 + weaponSelected * (weaponSpriteWidth + 4), 0, weaponSpriteWidth + 4, weaponSpriteHeight + 4);
+			
 
 			// cycle round drawing all the entities we have in the game
 			for (int i = 0; i < entities.size(); i++) {
@@ -389,6 +412,13 @@ public class Game extends Canvas {
 	}
 
 	/**
+	 * @param value The new firing interval
+	 */
+	public void setFiringInterval(long value) {
+		firingInterval = value;
+	}
+
+	/**
 	 * A class to handle keyboard input from the user. The class
 	 * handles both dynamic input during game play, i.e. left/right
 	 * and shoot, and more static type input (i.e. press any key to
@@ -403,6 +433,12 @@ public class Game extends Canvas {
 	private class KeyInputHandler extends KeyAdapter {
 		/** The number of key presses we've had while waiting for an "any key" press */
 		private int pressCount = 1;
+
+		private Game game;
+
+		public KeyInputHandler(Game game) {
+			this.game = game;
+		}
 
 		/**
 		 * Notification from AWT that a key has been pressed. Note that
@@ -459,6 +495,30 @@ public class Game extends Canvas {
 		 * @param e The details of the key that was typed.
 		 */
 		public void keyTyped(KeyEvent e) {
+			// if we hit escape, then quit the game
+			if (e.getKeyChar() == 27) {
+				System.exit(0);
+			}
+
+			if (!waitingForKeyPress) {
+				if (e.getKeyChar() == KeyEvent.VK_1) {
+					weaponSelected = 0;
+					((ShipEntity) ship).setWeapon(new DefaultWeapon(game, ship));
+				}
+				if (e.getKeyChar() == KeyEvent.VK_2) {
+					weaponSelected = 1;
+					((ShipEntity) ship).setWeapon(new SpreadShotWeapon(game, ship));
+				}
+				if (e.getKeyChar() == KeyEvent.VK_3) {
+					weaponSelected = 2;
+					((ShipEntity) ship).setWeapon(new RapidFireWeapon(game, ship));
+				}
+				if (e.getKeyChar() == KeyEvent.VK_4) {
+					weaponSelected = 3;
+					((ShipEntity) ship).setWeapon(new AlienWeapon(game, ship, harderAlienSpawnRate));
+				}
+			}
+
 			// if we're waiting for a "any key" type then
 			// check if we've recieved any recently. We may
 			// have had a keyType() event from the user releasing
@@ -475,11 +535,6 @@ public class Game extends Canvas {
 				} else {
 					pressCount++;
 				}
-			}
-
-			// if we hit escape, then quit the game
-			if (e.getKeyChar() == 27) {
-				System.exit(0);
 			}
 		}
 	}

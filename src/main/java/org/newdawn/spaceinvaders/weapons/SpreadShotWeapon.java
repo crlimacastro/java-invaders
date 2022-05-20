@@ -4,11 +4,11 @@ import org.newdawn.spaceinvaders.Entity;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.ShotEntity;
 
-public class DefaultWeapon implements IWeapon {
+public class SpreadShotWeapon implements IWeapon {
     private Game game;
     private Entity ship;
 
-    public DefaultWeapon(Game game, Entity ship) {
+    public SpreadShotWeapon(Game game, Entity ship) {
         this.game = game;
         this.ship = ship;
     }
@@ -25,8 +25,9 @@ public class DefaultWeapon implements IWeapon {
 
     @Override
     public void fire() {
-        ShotEntity shot = new ShotEntity(game, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30, 0, -300);
-		game.addEntity(shot);
+		game.addEntity(new ShotEntity(game, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30, -300, -300));
+        game.addEntity(new ShotEntity(game, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30, 0, -300));
+        game.addEntity(new ShotEntity(game, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30, 300, -300));
     }
 
 }

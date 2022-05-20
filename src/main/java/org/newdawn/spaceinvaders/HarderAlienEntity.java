@@ -54,7 +54,7 @@ public class HarderAlienEntity extends AlienEntity {
             TimerTask fireTask = new TimerTask() {
                 @Override
                 public void run() {
-                    AlienShotEntity shot = new AlienShotEntity(game, "sprites/alienShot.gif", getX() + 10, getY() + 30);
+                    AlienShotEntity shot = new AlienShotEntity(game, "sprites/alienShot.gif", getX() + 10, getY() + 30, 0, 300);
                     game.addEntity(shot);
                 }
             };

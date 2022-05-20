@@ -112,7 +112,11 @@ public class ShipEntity extends Entity {
 	 * @param weapon The weapon to use
 	 */
 	public void setWeapon(IWeapon weapon) {
+		if (this.weapon != null) {
+			this.weapon.onUnequip();
+		}
 		this.weapon = weapon;
+		this.weapon.onEquip();
 	}
 	
 	/**

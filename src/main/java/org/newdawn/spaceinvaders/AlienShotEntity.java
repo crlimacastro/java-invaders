@@ -1,8 +1,6 @@
 package org.newdawn.spaceinvaders;
 
 public class AlienShotEntity extends Entity {
-    /** The vertical speed at which the shot moves */
-	private double moveSpeed = 300;
 	/** The game in which this entity exists */
 	private Game game;
 	/** True if this shot has been "used", i.e. its hit something */
@@ -16,12 +14,13 @@ public class AlienShotEntity extends Entity {
 	 * @param x The initial x location of the shot
 	 * @param y The initial y location of the shot
 	 */
-	public AlienShotEntity(Game game,String sprite,int x,int y) {
+	public AlienShotEntity(Game game,String sprite,int x,int y, int dx, int dy) {
 		super(sprite,x,y);
 		
 		this.game = game;
 		
-		dy = moveSpeed;
+		this.dx = dx;
+		this.dy = dy;
 	}
 
 	/**
