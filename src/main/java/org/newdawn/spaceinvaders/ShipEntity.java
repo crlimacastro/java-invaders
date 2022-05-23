@@ -3,6 +3,7 @@ package org.newdawn.spaceinvaders;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.newdawn.spaceinvaders.resources.Sprite;
 import org.newdawn.spaceinvaders.weapons.DefaultWeapon;
 import org.newdawn.spaceinvaders.weapons.IWeapon;
 
@@ -64,14 +65,14 @@ public class ShipEntity extends Entity {
 		health--;
 		invinsible = true;
 
-		sprite = SpriteStore.get().getSprite("sprites/invinsibleShip.gif");
+		sprite = ResourceStore.getInstance().getResource("sprites/invinsibleShip.gif", Sprite::new);
 
 		// Task that disables invinsibility
 		TimerTask iframesTask = new TimerTask() {
 			@Override
 			public void run() {
 				invinsible = false;
-				sprite = SpriteStore.get().getSprite("sprites/ship.gif");
+				sprite = ResourceStore.getInstance().getResource("sprites/ship.gif", Sprite::new);
 			}
 		};
 		timer.schedule(iframesTask, iframes);
@@ -108,15 +109,15 @@ public class ShipEntity extends Entity {
 		weapon.fire();
 	}
 
+	public IWeapon getWeapon() {
+		return weapon;
+	}
+
 	/**
 	 * @param weapon The weapon to use
 	 */
 	public void setWeapon(IWeapon weapon) {
-		if (this.weapon != null) {
-			this.weapon.onUnequip();
-		}
 		this.weapon = weapon;
-		this.weapon.onEquip();
 	}
 	
 	/**

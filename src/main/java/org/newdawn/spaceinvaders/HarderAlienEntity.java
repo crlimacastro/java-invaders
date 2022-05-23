@@ -3,7 +3,8 @@ package org.newdawn.spaceinvaders;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
+
+import org.newdawn.spaceinvaders.resources.Sprite;
 
 public class HarderAlienEntity extends AlienEntity {
     // How many shots left to kill the alien
@@ -37,7 +38,7 @@ public class HarderAlienEntity extends AlienEntity {
      */
     public void damage() {
         health--;
-        sprite = SpriteStore.get().getSprite("sprites/damagedHarderAlien.gif");
+        sprite = ResourceStore.getInstance().getResource("sprites/damagedHarderAlien.gif", Sprite::new);
     }
 
     /**

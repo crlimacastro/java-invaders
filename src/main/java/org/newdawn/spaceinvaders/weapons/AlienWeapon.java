@@ -1,8 +1,6 @@
 package org.newdawn.spaceinvaders.weapons;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.newdawn.spaceinvaders.Entity;
 import org.newdawn.spaceinvaders.Game;
@@ -22,13 +20,8 @@ public class AlienWeapon implements IWeapon {
     }
 
     @Override
-    public void onEquip() {
-        /** Nothing happens */
-    }
-
-    @Override
-    public void onUnequip() {
-        /** Nothing happens */
+    public float getFireInterval() {
+        return 500;
     }
 
     @Override

@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 
 import org.newdawn.spaceinvaders.weapons.DefaultWeapon;
 import org.newdawn.spaceinvaders.weapons.RapidFireWeapon;
+import org.newdawn.spaceinvaders.resources.Sound;
+import org.newdawn.spaceinvaders.resources.Sprite;
 import org.newdawn.spaceinvaders.weapons.AlienWeapon;
 import org.newdawn.spaceinvaders.weapons.SpreadShotWeapon;
 
@@ -52,8 +54,6 @@ public class Game extends Canvas {
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
-	/** The interval between our players shot (ms) */
-	private long firingInterval = 500;
 	/** The number of aliens left on the screen */
 	private int alienCount;
 	/** The percentage of aliens that will spawn as a harder alien */
@@ -74,15 +74,15 @@ public class Game extends Canvas {
 	 * game event
 	 */
 	private boolean logicRequiredThisLoop = false;
-
+	/** Weapon selected UI logic */
 	private int weaponSelected = 0;
 	private Sprite[] weaponSprites = {
-		SpriteStore.get().getSprite("sprites/defaultshotico.gif"),
-		SpriteStore.get().getSprite("sprites/spreadshotico.gif"),
-		SpriteStore.get().getSprite("sprites/rapidshotico.gif"),
-		SpriteStore.get().getSprite("sprites/alienshotico.gif"),
-		
+		ResourceStore.getInstance().getResource("sprites/defaultshotico.gif", Sprite::new),
+		ResourceStore.getInstance().getResource("sprites/spreadshotico.gif", Sprite::new),
+		ResourceStore.getInstance().getResource("sprites/rapidshotico.gif", Sprite::new),
+		ResourceStore.getInstance().getResource("sprites/alienshotico.gif", Sprite::new),
 	};
+	AudioPlayer audioPlayer = new AudioPlayer();
 
 	/**
 	 * Construct our game and set it running.
@@ -139,6 +139,8 @@ public class Game extends Canvas {
 	 * create a new set.
 	 */
 	private void startGame() {
+		weaponSelected = 0;
+
 		// clear out any existing entities and intialise a new set
 		entities.clear();
 		initEntities();
@@ -180,6 +182,10 @@ public class Game extends Canvas {
 		}
 	}
 
+	private void playClip(String path) {
+		audioPlayer.playSound(ResourceStore.getInstance().getResource(path, Sound::new));
+	}
+
 	/**
 	 * Notification from a game entity that the logic of the game
 	 * should be run at the next opportunity (normally as a result of some
@@ -212,6 +218,7 @@ public class Game extends Canvas {
 	 * Notification that the player has died.
 	 */
 	public void notifyDeath() {
+		playClip("sounds/defeat.wav");
 		message = "Oh no! They got you, try again?";
 		waitingForKeyPress = true;
 	}
@@ -221,6 +228,7 @@ public class Game extends Canvas {
 	 * are dead.
 	 */
 	public void notifyWin() {
+		playClip("sounds/victory.wav");
 		message = "Well done! You Win!";
 		waitingForKeyPress = true;
 	}
@@ -229,6 +237,8 @@ public class Game extends Canvas {
 	 * Notification that an alien has been killed
 	 */
 	public void notifyAlienKilled() {
+		playClip("sounds/explosion.wav");
+
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
 
@@ -249,7 +259,7 @@ public class Game extends Canvas {
 	}
 
 	public void notifyShipDamaged() {
-		// TODO Update Health UI
+		playClip("sounds/explosion.wav");
 
 		ShipEntity shipCasted = (ShipEntity) ship;
 		if (shipCasted.getHealth() <= 0) {
@@ -264,13 +274,14 @@ public class Game extends Canvas {
 	 */
 	public void tryToFire() {
 		// check that we have waiting long enough to fire
-		if (System.currentTimeMillis() - lastFire < firingInterval) {
+		if (System.currentTimeMillis() - lastFire < ((ShipEntity) ship).getWeapon().getFireInterval()) {
 			return;
 		}
 
 		// if we waited long enough, create the shot entity, and record the time.
 		lastFire = System.currentTimeMillis();
 		((ShipEntity) ship).fireWeapon();
+		playClip("sounds/shoot.wav");
 	}
 
 	/**
@@ -314,7 +325,7 @@ public class Game extends Canvas {
 			g.setColor(Color.white);
 			g.drawString("Health: ", 16, 16 + g.getFontMetrics().getHeight() / 2);
 			ShipEntity shipCasted = (ShipEntity) ship;
-			Sprite shipSprite = SpriteStore.get().getSprite("sprites/ship.gif");
+			Sprite shipSprite = ResourceStore.getInstance().getResource("sprites/ship.gif", Sprite::new);
 			for (int i = 0; i < shipCasted.getHealth(); i++) {
 				int x = 16 + g.getFontMetrics().stringWidth("Health: ") + 8 + shipSprite.getWidth() * i;
 				int y = 8;
@@ -329,6 +340,8 @@ public class Game extends Canvas {
 			}
 			g.drawRect(200 - 2 + weaponSelected * (weaponSpriteWidth + 4), 0, weaponSpriteWidth + 4, weaponSpriteHeight + 4);
 			
+			// draw mute instructions
+			g.drawString("Press M to mute audio", 512, 16 + g.getFontMetrics().getHeight() / 2);
 
 			// cycle round drawing all the entities we have in the game
 			for (int i = 0; i < entities.size(); i++) {
@@ -409,13 +422,6 @@ public class Game extends Canvas {
 			} catch (Exception e) {
 			}
 		}
-	}
-
-	/**
-	 * @param value The new firing interval
-	 */
-	public void setFiringInterval(long value) {
-		firingInterval = value;
 	}
 
 	/**
@@ -517,6 +523,16 @@ public class Game extends Canvas {
 					weaponSelected = 3;
 					((ShipEntity) ship).setWeapon(new AlienWeapon(game, ship, harderAlienSpawnRate));
 				}
+				if (e.getKeyChar() == 'm') {
+					// Toggle Mute
+					audioPlayer.setMuted(!audioPlayer.isMuted());
+				}
+				if (e.getKeyChar() == '+') {
+					audioPlayer.setVolume(audioPlayer.getVolume() + 0.1f);
+				}
+				if (e.getKeyChar() == '-') {
+					audioPlayer.setVolume(audioPlayer.getVolume() - 0.1f);
+				}
 			}
 
 			// if we're waiting for a "any key" type then
@@ -531,6 +547,7 @@ public class Game extends Canvas {
 					// our new game
 					waitingForKeyPress = false;
 					startGame();
+					playClip("sounds/start.wav");
 					pressCount = 0;
 				} else {
 					pressCount++;

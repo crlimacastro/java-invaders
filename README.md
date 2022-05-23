@@ -24,6 +24,10 @@ Spacebar - Shoot
 
 1, 2, 3, 4 - Select weapon 1-4
 
+M - To Mute Audio
+
+NUMPAD_PLUS (+) & NUMPAD_MINUS (-) - Raise/lower volume
+
 ESC - Quit
 
 ## Changes

@@ -14,13 +14,8 @@ public class SpreadShotWeapon implements IWeapon {
     }
 
     @Override
-    public void onEquip() {
-        /** Nothing happens */
-    }
-
-    @Override
-    public void onUnequip() {
-        /** Nothing happens */
+    public float getFireInterval() {
+        return 500;
     }
 
     @Override

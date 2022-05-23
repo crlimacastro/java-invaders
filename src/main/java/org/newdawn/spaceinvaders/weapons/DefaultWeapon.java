@@ -14,13 +14,8 @@ public class DefaultWeapon implements IWeapon {
     }
 
     @Override
-    public void onEquip() {
-        /** Nothing happens */
-    }
-
-    @Override
-    public void onUnequip() {
-        /** Nothing happens */
+    public float getFireInterval() {
+        return 500;
     }
 
     @Override
@@ -28,5 +23,4 @@ public class DefaultWeapon implements IWeapon {
         ShotEntity shot = new ShotEntity(game, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30, 0, -300);
 		game.addEntity(shot);
     }
-
 }

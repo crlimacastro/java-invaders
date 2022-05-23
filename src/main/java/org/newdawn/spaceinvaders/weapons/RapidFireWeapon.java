@@ -14,13 +14,8 @@ public class RapidFireWeapon implements IWeapon {
     }
 
     @Override
-    public void onEquip() {
-        game.setFiringInterval(100);
-    }
-
-    @Override
-    public void onUnequip() {
-        game.setFiringInterval(500);
+    public float getFireInterval() {
+        return 100;
     }
 
     @Override

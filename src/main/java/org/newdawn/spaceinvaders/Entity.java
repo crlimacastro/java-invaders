@@ -3,6 +3,8 @@ package org.newdawn.spaceinvaders;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import org.newdawn.spaceinvaders.resources.Sprite;
+
 /**
  * An entity represents any element that appears in the game. The
  * entity is responsible for resolving collisions and movement
@@ -40,7 +42,7 @@ public abstract class Entity {
 	 * @param y The initial y location of this entity
 	 */
 	public Entity(String ref,int x,int y) {
-		this.sprite = SpriteStore.get().getSprite(ref);
+		this.sprite = ResourceStore.getInstance().getResource(ref, Sprite::new);
 		this.x = x;
 		this.y = y;
 	}
